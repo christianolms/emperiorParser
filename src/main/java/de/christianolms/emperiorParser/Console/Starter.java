@@ -12,16 +12,33 @@ import de.christianolms.emperiorParser.ParserStarter;
 public class Starter {
 
 	public static void main(String[] args) {
-		File dir = new File(args[0]);
-		if(!(dir.exists() && dir.isDirectory())){
-			throw new IllegalArgumentException("First parameter must point to an existing directory.");
+		if(args.length < 1){
+			System.out.println("You must provide a dir with emperior results");
+			System.exit(1);
+		}
+		File in = new File(args[0]);
+		if(!(in.exists())){
+			throw new IllegalArgumentException("First parameter must point to an existing file/directory.");
 			
 		}
-		try {
-			System.out.print(handleDir(dir));
+		else if(in.isDirectory()){
+			try {
+				System.out.print(handleDir(in));
+			}
+			catch (IOException e) {
+				e.printStackTrace();
+			}
+
 		}
-		catch (IOException e) {
-			e.printStackTrace();
+		else{
+			try {
+				String content = FileUtils.readFileToString(in);
+				System.out.println(parseFileContent(in.getName(), content));
+
+			}
+			catch (IOException e) {
+				e.printStackTrace();
+			}
 		}
 
 		}
